@@ -1,0 +1,24 @@
+services:
+  puhosos-task:
+    build: .
+    ports:
+      - "1337:1337"
+    environment:
+      - FLAG=flag{great_Task_Rev_PWN_S0lv3d}
+    restart: unless-stopped
+
+    read_only: true
+    
+    security_opt:
+      - no-new-privileges:true
+      
+    cap_drop:
+      - ALL
+      
+    pids_limit: 50
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 64M
