@@ -1,3 +1,5 @@
+// gcc -O0 -fno-stack-protector -no-pie -o puhosos main.c
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -10,42 +12,8 @@ void setup() {
     setvbuf(stderr, NULL, _IONBF, 0);
 }
 
-void update_puhosos() {
-    struct Puhosos {
-        char puhosos_name[32];
-        int is_chief;
-    } puhosos;
-
-    puhosos.is_chief = 0;
-    int8_t size = 0;
-
-    printf("Enter length of puhosos-name (<=32): ");
-
-    int temp_size;
-    scanf("%d", &temp_size);
-    size = (int8_t)temp_size;
-
-    if (size > 32) {
-        printf("[-] Too long puhosos-name\n");
-        exit(1);
-    }
-
-    printf("Enter puhosos-name: ");
-    while (getchar() != '\n');
-
-    read(0, puhosos.puhosos_name, size);
-
-    printf("[i] Updated puhosos: %s\n", puhosos.puhosos_name);
-
-    if (puhosos.is_chief) {
-        printf("[!] You are a chief-puhosos!\n");
-    } else {
-        printf("[-] You are NOT a chief-puhosos!\n");
-        exit(1);
-    }
-}
-
 void win() {
+    puts("win");
     char *flag = getenv("FLAG");
     if (flag) {
         printf("[+] Flag: %s\n", flag);
@@ -66,6 +34,41 @@ int check_password(const char *input) {
     }
     
     return 0;
+}
+
+void update_puhosos() {
+    struct Puhosos {
+        char puhosos_name[32];
+        int is_chief;
+    } puhosos;
+
+    puhosos.is_chief = 0;
+
+    printf("Enter length of puhosos-name (<=32): ");
+
+    int input_size;
+    scanf("%d", &input_size);
+
+    if (input_size > 32) {
+        printf("[-] Too long puhosos-name\n");
+        exit(1);
+    }
+
+    printf("Enter puhosos-name: ");
+    while (getchar() != '\n');
+
+    uint8_t final_size = (uint8_t)input_size;
+
+    read(0, puhosos.puhosos_name, final_size);
+
+    printf("[i] Updated puhosos: %s\n", puhosos.puhosos_name);
+
+    if (puhosos.is_chief) {
+        printf("[!] You are a chief-puhosos!\n");
+    } else {
+        printf("[-] You are NOT a chief-puhosos!\n");
+        exit(1);
+    }
 }
 
 int main() {
