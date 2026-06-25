@@ -1,4 +1,5 @@
 // gcc -O0 -fno-stack-protector -no-pie -o puhosos main.c
+// FbL3gt7wCpnhC2AB1bwcylbfLeYRrp3x
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +14,6 @@ void setup() {
 }
 
 void win() {
-    puts("win");
     char *flag = getenv("FLAG");
     if (flag) {
         printf("[+] Flag: %s\n", flag);
@@ -23,17 +23,32 @@ void win() {
     exit(0);
 }
 
-int check_password(const char *input) {
-    const char *expected = "SuperPuhosos";
-    int expected_len = strlen(expected);
+void check_password(const char *input) {
+    unsigned char expected[32] = {
+        0x56, 0x73, 0x5e, 0x20, 0x73, 0x61, 0x21, 0x60, 
+        0x5b, 0x69, 0x74, 0x73, 0x5f, 0x2f, 0x5f, 0x5d, 
+        0x11, 0x43, 0x55, 0x40, 0x5d, 0x49, 0x44, 0x41, 
+        0x64, 0x4c, 0x73, 0x79, 0x5e, 0x5d, 0x1d, 0x57
+    };
 
-    if (strncmp(input, expected, expected_len) == 0) {
-        if (input[expected_len] == '\n' || input[expected_len] == '\0') {
-            return 1;
+    for (int i = 0; i < 32; i++) {
+        if (input[i] == '\0' || input[i] == '\n') {
+            printf("[-] Incorrect puhosos-password\n");
+            exit(1);
+        }
+
+        unsigned char calc = (unsigned char)input[i] ^ (i + 0x10);
+        
+        if (calc != expected[i]) {
+            printf("[-] Incorrect puhosos-password\n");
+            exit(1);
         }
     }
-    
-    return 0;
+
+    if (input[32] != '\n' && input[32] != '\0') {
+        printf("[-] Incorrect puhosos-password\n");
+        exit(1);
+    }
 }
 
 void update_puhosos() {
@@ -55,7 +70,7 @@ void update_puhosos() {
     }
 
     printf("Enter puhosos-name: ");
-    while (getchar() != '\n');
+    while (getchar() != '\n'); // Очистка буфера от символа '\n' после scanf
 
     uint8_t final_size = (uint8_t)input_size;
 
@@ -73,7 +88,8 @@ void update_puhosos() {
 
 int main() {
     setup();
-    char password[32];
+    
+    char password[64];
 
     printf("=== PUHOSOS UPDATE PANEL ===\n");
     printf("Enter puhosos-password: ");
@@ -82,13 +98,9 @@ int main() {
         exit(1);
     }
 
-    if (!check_password(password)) {
-        printf("[-] Incorrect puhosos-password\n");
-        exit(1);
-    }
+    check_password(password);
 
     printf("[+] Correct puhosos-password\nUpdating\n");
-
     update_puhosos();
     
     return 0;
