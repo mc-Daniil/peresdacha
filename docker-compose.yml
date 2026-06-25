@@ -15,10 +15,9 @@ services:
     cap_drop:
       - ALL
       
-    pids_limit: 50
-    
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 64M
+          pids: 50
